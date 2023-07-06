@@ -7,8 +7,8 @@
 {% block 'body' %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type=text id=username name=username>
-    <input type=password id=password name=password>
+    <input type=text id=username_entry name=username>
+    <input type=password id=password_entry name=password>
     <button type="submit" id=login_button>Log In</button>
 </form>
 
