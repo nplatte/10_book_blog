@@ -26,10 +26,13 @@ class TestCanPost(StaticLiveServerTestCase):
         home_button = self.browser.find_element(By.ID, 'nav_home')
         find_post_button = self.browser.find_element(By.ID, 'nav_find_posts')
         about_button = self.browser.find_element(By.ID, 'nav_about')
-        sign_in_button = self.browser.find_element(By.ID, 'nav_gin_in')
+        sign_in_button = self.browser.find_element(By.ID, 'nav_sign_in')
         sign_in_button.click()
         # this takes me to a log in screen where I enter in my credentials
-        
+        title = self.browser.title
+        self.assertEqual('Log In', title)
+        username_box = self.browser.find_element(By.ID, 'username_entry')
+        password_box = self.browser.find_element(By.ID, 'password_entry')
         # I enter them in and am taken to a new screen
         # decide my first book will be V.E. Shwwab's "A Darker Shade of Magic"
         # I enter in the author and book name
