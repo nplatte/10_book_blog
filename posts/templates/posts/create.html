@@ -3,3 +3,14 @@
 {% block 'title' %}
 <title>Create Post</title>
 {% endblock %}
+
+{% block 'body' %}
+<div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" id="author_entry">
+        <input type="text" id="tag_entry">
+
+    </form>
+</div>
+{% endblock %}
