@@ -24,7 +24,7 @@ class TestLoginPage(LiveServerTestCase):
 
     def test_login_redirects_to_create_post_on_success(self):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': self.test_password}, follow=True)
-        self.assertRedirects(response, f'posts/create-new-post/')
+        self.assertRedirects(response, f'/posts/create-post')
 
     def test_login_redirects_to_login_on_fail(self):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': 'wrong_password'}, follow=True)
