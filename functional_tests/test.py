@@ -16,6 +16,16 @@ class TestCanPost(StaticLiveServerTestCase):
     def tearDown(self) -> None:
         self.browser.quit()
         return super().tearDown()
+    
+    def test_I_can_log_in(self):
+        sign_in_button = self.browser.find_element(By.ID, 'nav_sign_in')
+        sign_in_button.click()
+        username_box = self.browser.find_element(By.ID, 'username_entry')
+        password_box = self.browser.find_element(By.ID, 'password_entry')
+        username_box.send_keys(self.test_username)
+        password_box.send_keys(self.test_password)
+        self.browser.find_element(By.ID, 'login_button').click()
+        self.assertEqual(self.browser.title, 'Create Post')
 
     def test_user_can_make_post(self):
         # I navigate to the website
@@ -33,9 +43,19 @@ class TestCanPost(StaticLiveServerTestCase):
         self.assertEqual('Log In', title)
         username_box = self.browser.find_element(By.ID, 'username_entry')
         password_box = self.browser.find_element(By.ID, 'password_entry')
+        username_box.send_keys(self.test_username)
+        password_box.send_keys(self.test_password)
+        self.browser.find_element(By.ID, 'login_button').click()
         # I enter them in and am taken to a new screen
+        self.assertEqual(self.browser.title, 'Create Post')
         # decide my first book will be V.E. Shwwab's "A Darker Shade of Magic"
+        book_title = "A Darker Shade of Magic"
+        book_author = "V. E. Shwab"
         # I enter in the author and book name
+        author_entry_box = self.browser.find_element(By.ID, 'author_enty')
+        title_entry_box = self.browser.find_element(By.ID, 'title_entry')
+        author_entry_box.send_keys(book_author)
+        title_entry_box.send_keys(book_title)
         # I add the tags that are appropriate
         # I add my thoughts on the first two chapters and hit post
         # I click the home button and see my post on the recent posts
