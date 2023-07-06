@@ -3,3 +3,4 @@ __init__.py
 geckodriver.log
 __pycache__/
 db.sqlite3
+migrations
