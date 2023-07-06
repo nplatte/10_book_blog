@@ -17,7 +17,7 @@ class TestCanPost(StaticLiveServerTestCase):
         self.browser.quit()
         return super().tearDown()
     
-    def test_I_can_log_in(self):
+    def _log_in_from_home(self):
         sign_in_button = self.browser.find_element(By.ID, 'nav_sign_in')
         sign_in_button.click()
         username_box = self.browser.find_element(By.ID, 'username_entry')
@@ -25,6 +25,21 @@ class TestCanPost(StaticLiveServerTestCase):
         username_box.send_keys(self.test_username)
         password_box.send_keys(self.test_password)
         self.browser.find_element(By.ID, 'login_button').click()
+    
+    def test_I_can_log_in(self):
+        # I see the nav bar with a Home, Find Post, About, and Sign In and click sign in
+        sign_in_button = self.browser.find_element(By.ID, 'nav_sign_in')
+        sign_in_button.click()
+        title = self.browser.title
+        self.assertEqual('Log In', title)
+        # this takes me to a log in screen where I enter in my credentials
+        username_box = self.browser.find_element(By.ID, 'username_entry')
+        password_box = self.browser.find_element(By.ID, 'password_entry')
+        username_box.send_keys(self.test_username)
+        password_box.send_keys(self.test_password)
+        self.browser.find_element(By.ID, 'login_button').click()
+        self.assertEqual(self.browser.title, 'Create Post')
+        # I enter them in and am taken to a new screen
         self.assertEqual(self.browser.title, 'Create Post')
 
     def test_user_can_make_post(self):
@@ -32,22 +47,8 @@ class TestCanPost(StaticLiveServerTestCase):
         # I see no posts up so I decide to make one
         post_number = self.browser.find_elements(By.CLASS_NAME, 'post')
         self.assertEqual(0, len(post_number))
-        # I see the nav bar with a Home, Find Post, About, and Sign In and click sign in
-        home_button = self.browser.find_element(By.ID, 'nav_home')
-        find_post_button = self.browser.find_element(By.ID, 'nav_find_posts')
-        about_button = self.browser.find_element(By.ID, 'nav_about')
-        sign_in_button = self.browser.find_element(By.ID, 'nav_sign_in')
-        sign_in_button.click()
-        # this takes me to a log in screen where I enter in my credentials
-        title = self.browser.title
-        self.assertEqual('Log In', title)
-        username_box = self.browser.find_element(By.ID, 'username_entry')
-        password_box = self.browser.find_element(By.ID, 'password_entry')
-        username_box.send_keys(self.test_username)
-        password_box.send_keys(self.test_password)
-        self.browser.find_element(By.ID, 'login_button').click()
-        # I enter them in and am taken to a new screen
-        self.assertEqual(self.browser.title, 'Create Post')
+        # I log in to create a post
+        self._log_in_from_home()
         # decide my first book will be V.E. Shwwab's "A Darker Shade of Magic"
         book_title = "A Darker Shade of Magic"
         book_author = "V. E. Shwab"
@@ -57,7 +58,15 @@ class TestCanPost(StaticLiveServerTestCase):
         author_entry_box.send_keys(book_author)
         title_entry_box.send_keys(book_title)
         # I add the tags that are appropriate
+        tags = '#book 1 #Shade of Magic trilogy #V.E. Shwab'
+        tag_entry = self.browser.find_element(By.ID, 'tag_entry')
+        tag_entry.send_keys(tags)
         # I add my thoughts on the first two chapters and hit post
+        thoughts = 'blahblahblahblah'
+        thoughts_entry = self.browser.find_element(By.ID, 'post_entry')
+        thoughts_entry.send_keys(thoughts)
+        post_button = self.browser.find_element(By.ID, 'create_post_button')
+        post_button.click()
         # I click the home button and see my post on the recent posts
         post_number = self.browser.find_elements(By.CLASS_NAME, 'post')
         self.assertEqual(1, len(post_number))
