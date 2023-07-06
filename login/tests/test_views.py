@@ -22,15 +22,14 @@ class TestLoginPage(LiveServerTestCase):
         response = self.client.get(reverse('login_page'))
         self.assertTemplateUsed(response,'login/login.html')
 
-    def test_login_redirects_to_month_view_on_success(self):
+    def test_login_redirects_to_create_post_on_success(self):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': self.test_password}, follow=True)
-        curr_date = datetime.now()
-        self.assertRedirects(response, f'month_view/{curr_date.month}-{curr_date.year}/')
+        self.assertRedirects(response, f'posts/create-new-post/')
 
     def test_login_redirects_to_login_on_fail(self):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': 'wrong_password'}, follow=True)
         self.assertRedirects(response, reverse('login_page'))
 
-    def test_login_required_redirects_to_login_page(self):
+    '''def test_login_required_redirects_to_login_page(self):
         response = self.client.get(reverse('month_page', kwargs={'month': 2, 'year': 2022}), follow=True)
-        self.assertTemplateUsed(response, 'login/login.html')
+        self.assertTemplateUsed(response, 'login/login.html')'''

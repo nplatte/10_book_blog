@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.urls import reverse
 
 from datetime import datetime
 
@@ -11,7 +12,7 @@ def login_page(request):
         if user is not None:
             login(request, user)
             now = datetime.now()
-            return redirect(f'month_view/{now.month}-{now.year}/')
+            return redirect(reverse('create_post'))
         else:
-            return redirect('/')
+            return redirect(reverse('login_page'))
     return render(request, 'login/login.html')
