@@ -13,4 +13,7 @@ class Post(models.Model):
 
 class Tag(models.Model):
 
-    pass
+    tag_name = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.tag_name
