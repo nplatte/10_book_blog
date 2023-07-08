@@ -1,13 +1,33 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from posts.models import Post
 from posts.views import create_post_page
+
+# test that the context is being passed correctly
+# test that the forms are the right forms  to use
+# 
+class TestHomeView(TestCase):
+
+    def test_view_returns_right_template(self):
+        self.client.get(reverse('home_page'))
+        self.assertTemplateUsed('posts/home.html')
+
+    def test_context_contains_post_requests(self):
+        response = self.client.get(reverse('home_page'))
+        Post.objects.create(title='test')
+        self.assertEqual(len(response.context['posts']), 1)
+
 
 class TestCreatePostView(TestCase):
 
     def test_view_returns_right_template(self):
         self.client.get(reverse('create_post'))
         self.assertTemplateUsed('posts/create.html')
+
+    def test_view_requires_login(self):
+        response = self.client.get(reverse('create_post'))
+        self.assertRedirects(response, reverse('login_page'))
 
     def test_post_request_redirects_to_post_page(self):
         context = {
