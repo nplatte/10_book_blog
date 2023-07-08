@@ -34,8 +34,6 @@ class TestPost(TestCase):
         self.assertEqual(len(posts), 1)
 
 
-
-
 class TestTag(TestCase):
 
     def test_string_representation(self):
