@@ -27,7 +27,7 @@ class TestCreatePostView(TestCase):
 
     def test_view_requires_login(self):
         response = self.client.get(reverse('create_post'))
-        self.assertRedirects(response, reverse('login_page'))
+        self.assertRedirects(response, '/login/?next=/posts/create-post')
 
     def test_post_request_redirects_to_post_page(self):
         context = {
