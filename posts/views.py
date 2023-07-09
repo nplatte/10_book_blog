@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from posts.forms import PostModelForm
+from posts.models import Post
 
 def home_page(request):
-    return render(request, 'posts/home.html')
+    posts = Post.objects.all()
+    return render(request, 'posts/home.html', {'posts': posts})
 
 @login_required
 def create_post_page(request):
