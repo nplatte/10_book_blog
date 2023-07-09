@@ -5,4 +5,4 @@ class PostModelForm(ModelForm):
     
     class Meta:
         model = Post
-        fields = []
+        fields = ['title', 'book_author', 'book_title', 'post']
