@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from posts.models import Post
+from posts.forms import PostModelForm
 from django.contrib.auth.models import User
 from posts.views import create_post_page
 
@@ -37,11 +38,20 @@ class TestCreatePostView(TestCase):
     def test_post_request_redirects_to_post_page(self):
         self.client.force_login(self.test_user)
         context = {
-            'author_name': 'V.E. Schwab',
-            'book_name': 'A Darker Shade of Magic',
+            'title': 'Test Post',
+            'book_author': 'V.E. Schwab',
+            'book_title': 'A Darker Shade of Magic',
             'post': 'blahblahblabla'
         }
         response = self.client.post(reverse('create_post'), context)
         self.assertRedirects(response, reverse('view_post'))
+
+    def test_view_context(self):
+        self.client.force_login(self.test_user)
+        response = self.client.get(reverse('create_post'))
+        form = response.context['new_post_form']
+        self.assertIsInstance(form, PostModelForm)
+
+
 
         
