@@ -3,6 +3,8 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 from selenium.webdriver.common.by import By
 
+from time import sleep
+
 class TestCanPost(StaticLiveServerTestCase):
 
     def setUp(self):
@@ -53,7 +55,8 @@ class TestCanPost(StaticLiveServerTestCase):
         book_title = "A Darker Shade of Magic"
         book_author = "V. E. Shwab"
         # I enter in the author and book name
-        author_entry_box = self.browser.find_element(By.ID, 'author_enty')
+        sleep(20)
+        author_entry_box = self.browser.find_element(By.ID, 'author_entry')
         title_entry_box = self.browser.find_element(By.ID, 'title_entry')
         author_entry_box.send_keys(book_author)
         title_entry_box.send_keys(book_title)
@@ -71,4 +74,3 @@ class TestCanPost(StaticLiveServerTestCase):
         post_number = self.browser.find_elements(By.CLASS_NAME, 'post')
         self.assertEqual(1, len(post_number))
         # I click the new post and see what just got done posting
-        
