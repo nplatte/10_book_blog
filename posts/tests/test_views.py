@@ -52,6 +52,20 @@ class TestCreatePostView(TestCase):
         form = response.context['new_post_form']
         self.assertIsInstance(form, PostModelForm)
 
+    def test_view_makes_new_post_on_POST_request(self):
+        post_count = len(Post.objects.all())
+        self.assertEqual(0, post_count)
+        self.client.force_login(self.test_user)
+        context = {
+            'title': 'Test Post',
+            'book_author': 'V.E. Schwab',
+            'book_title': 'A Darker Shade of Magic',
+            'post': 'blahblahblabla'
+        }
+        response = self.client.post(reverse('create_post'), context)
+        self.assertEqual(1, len(Post.objects.all()))
+
+
 
 
         

@@ -12,8 +12,9 @@ def home_page(request):
 def create_post_page(request):
     new_post_form = PostModelForm()
     if request.method == "POST":
-        post =  PostModelForm(request.POST)
-        if post.is_valid():
+        new_post_form =  PostModelForm(request.POST)
+        if new_post_form.is_valid():
+            new_post_form.save()
             return redirect(reverse('view_post'))
 
     return render(request, 'posts/create.html', {'new_post_form': new_post_form})
