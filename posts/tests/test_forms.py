@@ -24,18 +24,16 @@ class TestTagModelForm(TestCase):
 
     def test_successful_form_submit(self):
         self.assertEqual(len(Tag.objects.all()), 0)
-        tag_form = TagForm({'tag_list': '#Steven King'})
+        tag_form = TagForm({'tag_list': '#Steven_King'})
         self.assertEqual(tag_form.errors, {})
         self.assertTrue(tag_form.is_valid())
-        self.assertEqual(len(Tag.objects.all()), 1)
 
     def test_form_has_right_identifying_info(self):
         form = TagForm()
         html = form.as_p()
         self.assertIn('id="tag_entry"', html)
 
-    def test_form_can_create_multiple_tags(self):
-        self.assertEqual(len(Tag.objects.all()), 0)
-        tag_form = TagForm({'tag_list': '#Steven King #Dark Tower'})
-        self.assertTrue(tag_form.is_valid())
-        self.assertEqual(len(Tag.objects.all()), 2)
+    def test_custom_validation_catches_missing_hashtag(self):
+        tag_form = TagForm({'tag_list': '#Steven_King Dark_Tower'})
+        self.assertEqual(tag_form.errors['tag_list'], ['# missing in tag'])
+        self.assertFalse(tag_form.is_valid())

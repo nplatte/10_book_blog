@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 from posts.models import Post, Tag
+from django.core.exceptions import ValidationError
 
 class PostModelForm(ModelForm):
     
@@ -22,3 +23,10 @@ class TagForm(forms.Form):
         max_length=60, 
         widget=forms.Textarea(attrs={'id': 'tag_entry'})
         )
+    
+    def clean_tag_list(self):
+        data = self.cleaned_data['tag_list']
+        for tag in data.split(' '):
+            if tag[0] != '#':
+                raise ValidationError('# missing in tag')
+        return data

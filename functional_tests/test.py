@@ -55,7 +55,6 @@ class TestCanPost(StaticLiveServerTestCase):
         book_title = "A Darker Shade of Magic"
         book_author = "V. E. Shwab"
         # I enter in the author and book name
-        sleep(20)
         author_entry_box = self.browser.find_element(By.ID, 'author_entry')
         title_entry_box = self.browser.find_element(By.ID, 'title_entry')
         author_entry_box.send_keys(book_author)
