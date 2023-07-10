@@ -2,6 +2,7 @@ from selenium import webdriver
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 from selenium.webdriver.common.by import By
+from posts.models import Post, Tag
 
 from time import sleep
 
@@ -74,4 +75,27 @@ class TestCanPost(StaticLiveServerTestCase):
         # I click the home button and see my post on the recent posts
         post_number = self.browser.find_elements(By.CLASS_NAME, 'post')
         self.assertEqual(1, len(post_number))
-        # I click the new post and see what just got done posting
+
+    def test_i_can_filter_posts_by_tags(self):
+        p1, p2, p3 = Post.objects.create(title='Post 1'), Post.objects.create(title='Post 2'), Post.objects.create(title='Post 3')
+        t1, t2, t3 = Tag.objects.create(tag_name='start'), Tag.objects.create(tag_name='middle'), Tag.objects.create(tag_name='end')
+        p1.tags.add(t1)
+        p2.tags.add(t2)
+        p3.tags.add(t3)
+        self.browser.refresh()
+        # I open the website and see three posts with the most recent at the top
+        post_count = len(self.browser.find_elements(By.CLASS_NAME, 'post'))
+        self.assertEqual(3, post_count)
+        tag_count = len(self.browser.find_elements(By.CLASS_NAME, 'tag'))
+        self.assertEqual(3, tag_count)
+        # I decide I want to only see what post was the start of the series
+        # I click the permanent tags on the side to filter the posts and only see one now
+        start_tag = self.browser.find_elements(By.ID, 'tag_start')
+        start_tag.click()
+        post_count = len(self.browser.find_elements(By.CLASS_NAME, 'post'))
+        self.assertEqual(1, post_count)
+        # I click it again and all of the posts appear
+        start_tag.click()
+        post_count = len(self.browser.find_elements(By.CLASS_NAME, 'post'))
+        self.assertEqual(3, post_count)
+        
