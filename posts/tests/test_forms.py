@@ -4,16 +4,21 @@ from posts.models import Tag
 
 class TestPostModelForm(TestCase):
 
+    def setUp(self) -> None:
+        form_data = {
+            'title': 'A', 
+            'book_author': 'V.E. Schwab',
+            'book_title': 'A Darker Side of Magic',
+            'post': 'blahblahblah'}
+        self.test_form = PostModelForm(form_data)
+        return super().setUp()
+
     def test_form_successful_submit(self):
-        new_form = PostModelForm({'title': 'A', 'book_author': 'V.E. Schwab',
-                                  'book_title': 'A Darker Side of Magic',
-                                  'post': 'blahblahblah'})
-        self.assertEqual(new_form.errors, {})
-        self.assertTrue(new_form.is_valid())
+        self.assertEqual(self.test_form.errors, {})
+        self.assertTrue(self.test_form.is_valid())
 
     def test_form_has_right_identifying_information(self):
-        form = PostModelForm()
-        form_as_html = form.as_p()
+        form_as_html = self.test_form.as_p()
         self.assertIn('id="author_entry"', form_as_html)
         self.assertIn('id="title_entry"', form_as_html)
         self.assertIn('id="post_entry"', form_as_html)
@@ -22,15 +27,16 @@ class TestPostModelForm(TestCase):
 
 class TestTagModelForm(TestCase):
 
+    def setUp(self):
+        form_data = {'tag_list': '#Steven_King'}
+        self.test_form = TagForm(form_data)
+
     def test_successful_form_submit(self):
-        self.assertEqual(len(Tag.objects.all()), 0)
-        tag_form = TagForm({'tag_list': '#Steven_King'})
-        self.assertEqual(tag_form.errors, {})
-        self.assertTrue(tag_form.is_valid())
+        self.assertEqual(self.test_form.errors, {})
+        self.assertTrue(self.test_form.is_valid())
 
     def test_form_has_right_identifying_info(self):
-        form = TagForm()
-        html = form.as_p()
+        html = self.test_form.as_p()
         self.assertIn('id="tag_entry"', html)
 
     def test_custom_validation_catches_missing_hashtag(self):
