@@ -5,12 +5,9 @@ from posts.models import Tag
 class TestPostModelForm(TestCase):
 
     def test_form_successful_submit(self):
-        t1, t2 = Tag(tag_name='t1'), Tag(tag_name='t2')
-        t1.save()
-        t2.save()
         new_form = PostModelForm({'title': 'A', 'book_author': 'V.E. Schwab',
                                   'book_title': 'A Darker Side of Magic',
-                                  'post': 'blahblahblah', 'tags': [t1, t2]})
+                                  'post': 'blahblahblah'})
         self.assertEqual(new_form.errors, {})
         self.assertTrue(new_form.is_valid())
 
@@ -21,24 +18,24 @@ class TestPostModelForm(TestCase):
         self.assertIn('id="title_entry"', form_as_html)
         self.assertIn('id="post_entry"', form_as_html)
         self.assertIn('id="book_title_entry"', form_as_html)
-        self.assertIn('id="tag_entry"', form_as_html)
-
-    def test_form_validation_checks_for_hashtag(self):
-        new_form = PostModelForm({'title': 'A', 'book_author': 'V.E. Schwab',
-                                  'book_title': 'A Darker Side of Magic',
-                                  'post': 'blahblahblah', 'tags': 'test'})
-        self.assertEqual(len(new_form.errors['tags']), 1)
-        self.assertEqual(new_form.errors['tags'][0], 'Add a hashtag infront of the tag')
 
 
 class TestTagModelForm(TestCase):
 
     def test_successful_form_submit(self):
-        pass
+        self.assertEqual(len(Tag.objects.all()), 0)
+        tag_form = TagForm({'tag_list': '#Steven King'})
+        self.assertEqual(tag_form.errors, {})
+        self.assertTrue(tag_form.is_valid())
+        self.assertEqual(len(Tag.objects.all()), 1)
 
     def test_form_has_right_identifying_info(self):
-        pass
+        form = TagForm()
+        html = form.as_p()
+        self.assertIn('id="tag_entry"', html)
 
     def test_form_can_create_multiple_tags(self):
-        pass
-
+        self.assertEqual(len(Tag.objects.all()), 0)
+        tag_form = TagForm({'tag_list': '#Steven King #Dark Tower'})
+        self.assertTrue(tag_form.is_valid())
+        self.assertEqual(len(Tag.objects.all()), 2)
