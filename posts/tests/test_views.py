@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from posts.models import Post
-from posts.forms import PostModelForm
+from posts.forms import PostModelForm, TagForm
 from django.contrib.auth.models import User
 from posts.views import create_post_page
 
@@ -16,8 +16,9 @@ class TestHomeView(TestCase):
         self.assertTemplateUsed('posts/home.html')
 
     def test_context_contains_post_requests(self):
-        response = self.client.get(reverse('home_page'))
         Post.objects.create(title='test')
+        response = self.client.get(reverse('home_page'))
+        
         self.assertEqual(len(response.context['posts']), 1)
 
 
@@ -44,13 +45,15 @@ class TestCreatePostView(TestCase):
             'post': 'blahblahblabla'
         }
         response = self.client.post(reverse('create_post'), context)
-        self.assertRedirects(response, reverse('view_post'))
+        self.assertRedirects(response, reverse('home_page'))
 
     def test_view_context(self):
         self.client.force_login(self.test_user)
         response = self.client.get(reverse('create_post'))
         form = response.context['new_post_form']
         self.assertIsInstance(form, PostModelForm)
+        form = response.context['post_tags_form']
+        self.assertIsInstance(form, TagForm)
 
     def test_view_makes_new_post_on_POST_request(self):
         post_count = len(Post.objects.all())

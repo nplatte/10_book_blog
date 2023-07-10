@@ -58,7 +58,9 @@ class TestCanPost(StaticLiveServerTestCase):
         author_entry_box = self.browser.find_element(By.ID, 'author_entry')
         title_entry_box = self.browser.find_element(By.ID, 'title_entry')
         author_entry_box.send_keys(book_author)
-        title_entry_box.send_keys(book_title)
+        title_entry_box.send_keys('First Post!')
+        boot_title_entry_box = self.browser.find_element(By.ID, 'book_title_entry')
+        boot_title_entry_box.send_keys(book_title)
         # I add the tags that are appropriate
         tags = '#book 1 #Shade of Magic trilogy #V.E. Shwab'
         tag_entry = self.browser.find_element(By.ID, 'tag_entry')
