@@ -8,7 +8,10 @@ def home_page(request):
     posts = Post.objects.all()
     context = {
         'posts': posts,
-        'general_tags': Tag.objects.all()}
+        'general_tags': Tag.objects.filter(group_name='general'),
+        'author_tags': Tag.objects.filter(group_name='author'),
+        'book_tags': Tag.objects.filter(group_name='book'),
+        }
     return render(request, 'posts/home.html', context)
 
 @login_required
