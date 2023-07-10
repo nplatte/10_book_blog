@@ -22,42 +22,27 @@ class TestHomeView(TestCase):
         self.assertEqual(len(response.context['posts']), 1)
 
 
-class TestCreatePostView(TestCase):
+class TestGETCreatePostView(TestCase):
 
     def setUp(self):
         self.test_user = User.objects.create_user(username='test_user', password='passweod')
+        self.client.force_login(self.test_user)
+        self.response = self.client.get(reverse('create_post'))
 
     def test_view_returns_right_template(self):
-        self.client.force_login(self.test_user)
-        self.client.get(reverse('create_post'))
         self.assertTemplateUsed('posts/create.html')
 
-    def test_view_requires_login(self):
-        response = self.client.get(reverse('create_post'))
-        self.assertRedirects(response, '/login/?next=/posts/create-post')
-
-    def test_post_request_redirects_to_post_page(self):
-        self.client.force_login(self.test_user)
-        context = {
-            'title': 'Test Post',
-            'book_author': 'V.E. Schwab',
-            'book_title': 'A Darker Shade of Magic',
-            'post': 'blahblahblabla'
-        }
-        response = self.client.post(reverse('create_post'), context)
-        self.assertRedirects(response, reverse('home_page'))
-
     def test_view_context(self):
-        self.client.force_login(self.test_user)
-        response = self.client.get(reverse('create_post'))
-        form = response.context['new_post_form']
+        form = self.response.context['new_post_form']
         self.assertIsInstance(form, PostModelForm)
-        form = response.context['post_tags_form']
+        form = self.response.context['post_tags_form']
         self.assertIsInstance(form, TagForm)
 
-    def test_view_makes_new_post_on_POST_request(self):
-        post_count = len(Post.objects.all())
-        self.assertEqual(0, post_count)
+
+class TestPOSTCreatePostView(TestCase):
+    
+    def setUp(self) -> None:
+        self.test_user = User.objects.create_user(username='test_user', password='passweod')
         self.client.force_login(self.test_user)
         context = {
             'title': 'Test Post',
@@ -65,10 +50,14 @@ class TestCreatePostView(TestCase):
             'book_title': 'A Darker Shade of Magic',
             'post': 'blahblahblabla'
         }
-        response = self.client.post(reverse('create_post'), context)
+        self.response = self.client.post(reverse('create_post'), context)
+        return super().setUp()
+    
+    def test_post_request_redirects_to_post_page(self):
+        self.assertRedirects(self.response, reverse('home_page'))    
+
+    def test_view_makes_new_post_on_POST_request(self):
         self.assertEqual(1, len(Post.objects.all()))
-
-
 
 
         
