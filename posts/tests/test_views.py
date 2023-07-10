@@ -54,8 +54,6 @@ class TestGETCreatePostView(TestCase):
         self.assertIsInstance(form, TagForm)
 
 
-
-
 class TestPOSTCreatePostView(TestCase):
     
     def setUp(self) -> None:
@@ -65,7 +63,8 @@ class TestPOSTCreatePostView(TestCase):
             'title': 'Test Post',
             'book_author': 'V.E. Schwab',
             'book_title': 'A Darker Shade of Magic',
-            'post': 'blahblahblabla'
+            'post': 'blahblahblabla',
+            'tag_list': '#start #V.E._Schwab'
         }
         self.response = self.client.post(reverse('create_post'), context)
         return super().setUp()
@@ -76,5 +75,8 @@ class TestPOSTCreatePostView(TestCase):
     def test_view_makes_new_post_on_POST_request(self):
         self.assertEqual(1, len(Post.objects.all()))
 
-
-        
+    def test_POST_request_with_tags_creates_new_blog_post_with_tags(self):
+        new_post = Post.objects.all()[0]
+        same_post = Post.objects.filter(tags__tag_name='start')
+        self.assertEqual(1, len(same_post))
+        self.assertEqual(new_post.id, same_post[0].id)
