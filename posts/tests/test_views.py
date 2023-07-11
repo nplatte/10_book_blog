@@ -4,7 +4,7 @@ from django.urls import reverse
 from posts.models import Post, Tag
 from posts.forms import PostModelForm, TagForm
 from django.contrib.auth.models import User
-from posts.views import create_post_page
+from posts.views import _add_tags
 
 # test that the context is being passed correctly
 # test that the forms are the right forms  to use
@@ -77,6 +77,33 @@ class TestPOSTCreatePostView(TestCase):
 
     def test_POST_request_with_tags_creates_new_blog_post_with_tags(self):
         new_post = Post.objects.all()[0]
-        same_post = Post.objects.filter(tags__tag_name='start')
+        same_post = Post.objects.filter(tags__tag_name='#start')
         self.assertEqual(1, len(same_post))
         self.assertEqual(new_post.id, same_post[0].id)
+
+
+class TestHelperFunc(TestCase):
+
+    def test_add_tags_base_case(self):
+        new_post = Post.objects.create(title='Test Post')
+        tags = '#start'
+        self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 0)
+        _add_tags(new_post, tags)
+        self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 1)
+
+    def test_add_tags_two_tags(self):
+        new_post = Post.objects.create(title='Test Post')
+        tags = '#start #author_name'
+        self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 0)
+        _add_tags(new_post, tags)
+        self.assertEqual(len(Post.objects.filter(tags__tag_name='#author_name')), 1)
+        self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 1)
+
+    def test_new_tags_are_not_created_if_they_already_exist(self):
+        new_post = Post.objects.create(title='Test Post')
+        t1 = Tag.objects.create(tag_name='#start')
+        t2 = Tag.objects.create(tag_name='#author_name')
+        tags = '#start #author_name'
+        self.assertEqual(len(Tag.objects.all()), 2)
+        _add_tags(new_post, tags)
+        self.assertEqual(len(Tag.objects.all()), 2)

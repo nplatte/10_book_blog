@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from posts.forms import PostModelForm, TagForm
 from posts.models import Post, Tag
+from django.core.exceptions import ObjectDoesNotExist
 
 def home_page(request):
     posts = Post.objects.all()
@@ -23,11 +24,22 @@ def create_post_page(request):
         'post_tags_form': post_tags_form}
     if request.method == "POST":
         new_post_form =  PostModelForm(request.POST)
-        if new_post_form.is_valid():
-            new_post_form.save()
+        post_tags = TagForm(request.POST)
+        if new_post_form.is_valid() and post_tags.is_valid():
+            new_post = new_post_form.save()
+            _add_tags(new_post, request.POST['tag_list'])
             return redirect(reverse('home_page'))
 
     return render(request, 'posts/create.html', context)
+
+def _add_tags(post, tag_list):
+    tags = tag_list.split(' ')
+    for tag in tags:
+        try:
+            tag_to_add = Tag.objects.get(tag_name=tag)
+        except ObjectDoesNotExist:
+            tag_to_add = Tag.objects.create(tag_name=tag)
+        post.tags.add(tag_to_add)
 
 def view_post_page(request):
     return render(request, 'posts/view.html')
