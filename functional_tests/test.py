@@ -63,8 +63,14 @@ class TestCanPost(StaticLiveServerTestCase):
         boot_title_entry_box = self.browser.find_element(By.ID, 'book_title_entry')
         boot_title_entry_box.send_keys(book_title)
         # I add the tags that are appropriate
-        tags = '#book 1 #Shade of Magic trilogy #V.E. Shwab'
-        tag_entry = self.browser.find_element(By.ID, 'tag_entry')
+        tags = '#book1'
+        tag_entry = self.browser.find_element(By.ID, 'general_tag_entry')
+        tag_entry.send_keys(tags)
+        tags = '#ShadeofMagic'
+        tag_entry = self.browser.find_element(By.ID, 'book_tag_entry')
+        tag_entry.send_keys(tags)
+        tags = '#V.E.Shwab'
+        tag_entry = self.browser.find_element(By.ID, 'author_tag_entry')
         tag_entry.send_keys(tags)
         # I add my thoughts on the first two chapters and hit post
         thoughts = 'blahblahblahblah'
@@ -78,7 +84,7 @@ class TestCanPost(StaticLiveServerTestCase):
 
     def test_i_can_filter_posts_by_tags(self):
         p1, p2, p3 = Post.objects.create(title='Post 1'), Post.objects.create(title='Post 2'), Post.objects.create(title='Post 3')
-        t1, t2, t3 = Tag.objects.create(tag_name='start'), Tag.objects.create(tag_name='middle'), Tag.objects.create(tag_name='end')
+        t1, t2, t3 = Tag.objects.create(tag_name='start', group_name='general'), Tag.objects.create(tag_name='middle', group_name='author'), Tag.objects.create(tag_name='end', group_name='book')
         p1.tags.add(t1)
         p2.tags.add(t2)
         p3.tags.add(t3)
