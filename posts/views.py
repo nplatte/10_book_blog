@@ -40,7 +40,7 @@ def _add_tags(post, tag_list, tag_type):
         try:
             tag_to_add = Tag.objects.get(tag_name=tag)
         except ObjectDoesNotExist:
-            tag_to_add = Tag.objects.create(tag_name=tag)
+            tag_to_add = Tag.objects.create(tag_name=tag, group_name=tag_type)
         post.tags.add(tag_to_add)
 
 def view_post_page(request):

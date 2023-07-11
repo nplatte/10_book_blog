@@ -19,14 +19,39 @@ class PostModelForm(ModelForm):
 
 class TagForm(forms.Form):
 
-    tag_list = forms.CharField(
+    general_tag_list = forms.CharField(
         max_length=60, 
-        widget=forms.Textarea(attrs={'id': 'tag_entry'})
+        widget=forms.TextInput(attrs={'id': 'general_tag_entry'})
+        )
+    author_tag_list = forms.CharField(
+        max_length=60, 
+        widget=forms.TextInput(attrs={'id': 'author_tag_entry'})
+        )
+    book_tag_list = forms.CharField(
+        max_length=60, 
+        widget=forms.TextInput(attrs={'id': 'book_tag_entry'})
         )
     
-    def clean_tag_list(self):
-        data = self.cleaned_data['tag_list']
+    def clean_general_tag_list(self):
+        tags_have_hashes = self._check_for_hash_tags(self.cleaned_data['general_tag_list'])
+        if not tags_have_hashes:
+            raise ValidationError('# missing in tag')
+        return self.cleaned_data['general_tag_list']
+    
+    def clean_author_tag_list(self):
+        tags_have_hashes = self._check_for_hash_tags(self.cleaned_data['author_tag_list'])
+        if not tags_have_hashes:
+            raise ValidationError('# missing in tag')
+        return self.cleaned_data['author_tag_list']
+    
+    def clean_book_tag_list(self):
+        tags_have_hashes = self._check_for_hash_tags(self.cleaned_data['book_tag_list'])
+        if not tags_have_hashes:
+            raise ValidationError('# missing in tag')
+        return self.cleaned_data['book_tag_list']
+    
+    def _check_for_hash_tags(self, data):
         for tag in data.split(' '):
             if tag[0] != '#':
-                raise ValidationError('# missing in tag')
-        return data
+                return False
+        return True

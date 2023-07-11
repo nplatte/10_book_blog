@@ -42,9 +42,11 @@ class TestTagModelForm(TestCase):
 
     def test_form_has_right_identifying_info(self):
         html = self.test_form.as_p()
-        self.assertIn('id="tag_entry"', html)
+        self.assertIn('id="general_tag_entry"', html)
+        self.assertIn('id="author_tag_entry"', html)
+        self.assertIn('id="book_tag_entry"', html)
 
     def test_custom_validation_catches_missing_hashtag(self):
         tag_form = TagForm(self.bad_form_data)
-        self.assertEqual(tag_form.errors['tag_list'], ['# missing in tag'])
+        self.assertEqual(tag_form.errors['book_tag_list'], ['# missing in tag'])
         self.assertFalse(tag_form.is_valid())
