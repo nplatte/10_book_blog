@@ -33,25 +33,22 @@ class TagForm(forms.Form):
         )
     
     def clean_general_tag_list(self):
-        tags_have_hashes = self._check_for_hash_tags(self.cleaned_data['general_tag_list'])
-        if not tags_have_hashes:
-            raise ValidationError('# missing in tag')
-        return self.cleaned_data['general_tag_list']
+        data = self.cleaned_data['general_tag_list']
+        self._check_for_hash_tags(data)
+        return data
     
     def clean_author_tag_list(self):
-        tags_have_hashes = self._check_for_hash_tags(self.cleaned_data['author_tag_list'])
-        if not tags_have_hashes:
-            raise ValidationError('# missing in tag')
-        return self.cleaned_data['author_tag_list']
+        data = self.cleaned_data['author_tag_list']
+        self._check_for_hash_tags(data)
+        return data
     
     def clean_book_tag_list(self):
-        tags_have_hashes = self._check_for_hash_tags(self.cleaned_data['book_tag_list'])
-        if not tags_have_hashes:
-            raise ValidationError('# missing in tag')
-        return self.cleaned_data['book_tag_list']
+        data = self.cleaned_data['book_tag_list']
+        self._check_for_hash_tags(data)
+        return data
     
     def _check_for_hash_tags(self, data):
         for tag in data.split(' '):
             if tag[0] != '#':
-                return False
+                raise ValidationError('# missing in tag')
         return True
