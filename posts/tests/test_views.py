@@ -64,7 +64,9 @@ class TestPOSTCreatePostView(TestCase):
             'book_author': 'V.E. Schwab',
             'book_title': 'A Darker Shade of Magic',
             'post': 'blahblahblabla',
-            'tag_list': '#start #V.E._Schwab'
+            'general_tag_list': '#start',
+            'author_tag_list': '#V.E._Schwab',
+            'book_tag_list': '#A_Darker_Shade_of_Magic'
         }
         self.response = self.client.post(reverse('create_post'), context)
         return super().setUp()
@@ -84,26 +86,25 @@ class TestPOSTCreatePostView(TestCase):
 
 class TestHelperFunc(TestCase):
 
+    def setUp(self) -> None:
+        self.new_post = Post.objects.create(title='Test Post')
+        self.tags = '#start #author_name'
+        return super().setUp()
+
     def test_add_tags_base_case(self):
-        new_post = Post.objects.create(title='Test Post')
-        tags = '#start'
         self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 0)
-        _add_tags(new_post, tags)
+        _add_tags(self.new_post, self.tags, 'general')
         self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 1)
 
     def test_add_tags_two_tags(self):
-        new_post = Post.objects.create(title='Test Post')
-        tags = '#start #author_name'
         self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 0)
-        _add_tags(new_post, tags)
+        _add_tags(self.new_post, self.tags, 'general')
         self.assertEqual(len(Post.objects.filter(tags__tag_name='#author_name')), 1)
         self.assertEqual(len(Post.objects.filter(tags__tag_name='#start')), 1)
 
     def test_new_tags_are_not_created_if_they_already_exist(self):
-        new_post = Post.objects.create(title='Test Post')
         t1 = Tag.objects.create(tag_name='#start')
         t2 = Tag.objects.create(tag_name='#author_name')
-        tags = '#start #author_name'
         self.assertEqual(len(Tag.objects.all()), 2)
-        _add_tags(new_post, tags)
+        _add_tags(self.new_post, self.tags, 'general')
         self.assertEqual(len(Tag.objects.all()), 2)

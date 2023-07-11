@@ -27,12 +27,14 @@ def create_post_page(request):
         post_tags = TagForm(request.POST)
         if new_post_form.is_valid() and post_tags.is_valid():
             new_post = new_post_form.save()
-            _add_tags(new_post, request.POST['tag_list'])
+            _add_tags(new_post, request.POST['general_tag_list'], 'general')
+            _add_tags(new_post, request.POST['author_tag_list'], 'author')
+            _add_tags(new_post, request.POST['book_tag_list'], 'book')
             return redirect(reverse('home_page'))
 
     return render(request, 'posts/create.html', context)
 
-def _add_tags(post, tag_list):
+def _add_tags(post, tag_list, tag_type):
     tags = tag_list.split(' ')
     for tag in tags:
         try:

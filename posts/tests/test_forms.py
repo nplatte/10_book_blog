@@ -28,8 +28,13 @@ class TestPostModelForm(TestCase):
 class TestTagModelForm(TestCase):
 
     def setUp(self):
-        form_data = {'tag_list': '#Steven_King'}
-        self.test_form = TagForm(form_data)
+        self.good_form_data = {'author_tag_list': '#Steven_King',
+                               'general_tag_list': '#start',
+                               'book_tag_list': '#TheDarkTower'}
+        self.bad_form_data = {'author_tag_list': '#Steven_King',
+                               'general_tag_list': '#start',
+                               'book_tag_list': 'TheDarkTower'}
+        self.test_form = TagForm(self.good_form_data)
 
     def test_successful_form_submit(self):
         self.assertEqual(self.test_form.errors, {})
@@ -40,6 +45,6 @@ class TestTagModelForm(TestCase):
         self.assertIn('id="tag_entry"', html)
 
     def test_custom_validation_catches_missing_hashtag(self):
-        tag_form = TagForm({'tag_list': '#Steven_King Dark_Tower'})
+        tag_form = TagForm(self.bad_form_data)
         self.assertEqual(tag_form.errors['tag_list'], ['# missing in tag'])
         self.assertFalse(tag_form.is_valid())
