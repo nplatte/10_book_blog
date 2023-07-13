@@ -1,10 +1,11 @@
 <head>
 {% block 'title' %}
 {% endblock %}
+{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'posts/css/navbar.css' %}">
 </head>
 <body>
-    <div>
+    <div class="navbar">
         <a id="nav_home" href="/">Home</a>
         <a id="nav_find_posts" href="">Find Posts</a>
         <a id="nav_about" href="">About</a>
