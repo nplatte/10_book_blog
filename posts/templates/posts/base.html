@@ -1,6 +1,7 @@
 <head>
 {% block 'title' %}
 {% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'posts/css/navbar.css' %}">
 </head>
 <body>
     <div>
@@ -11,4 +12,7 @@
     </div>
     {% block 'body' %}
     {% endblock %}
+    {% block 'script' %}
+    {% endblock %}
+    <script src="\static\posts\js\jquery-3.7.0.js"></script>
 </body>
