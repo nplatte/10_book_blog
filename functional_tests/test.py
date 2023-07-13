@@ -96,7 +96,7 @@ class TestCanPost(StaticLiveServerTestCase):
         self.assertEqual(3, tag_count)
         # I decide I want to only see what post was the start of the series
         # I click the permanent tags on the side to filter the posts and only see one now
-        start_tag = self.browser.find_elements(By.ID, 'tag_start')
+        start_tag = self.browser.find_elements(By.ID, 'tag_#start')
         start_tag.click()
         post_count = len(self.browser.find_elements(By.CLASS_NAME, 'post'))
         self.assertEqual(1, post_count)
