@@ -1,5 +1,28 @@
 /* .:class    #:id    */
+:root {
+    --nav-bg-color: rgb(32, 32, 32);
+    --text_color: rgb(255, 255, 255);
+}
+
 
 .navbar {
-    background-color: blue;
+    background-color: var(--nav-bg-color);
+    height: 3%;
+    max-height: 150px;
+    min-height: 5px;
+}
+
+.nav_btn {
+    background-color: var(--nav-bg-color);
+    text-decoration: none;
+    font-family: fantasy;
+    margin-left: 5mm;
+}
+
+a:link {
+    color: var(--text_color)
+}
+
+a:visited {
+    color: var(--text_color)
 }
