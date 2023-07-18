@@ -1,7 +1,19 @@
 {% extends 'posts/base.html' %}
 
 {% block 'body' %}
-{% for pos in posts %}
-<a class="post">{{ pos.title }}</a>
+{% for post in posts %}
+<a class="post">{{ post.title }}</a>
 {% endfor %}
+
+<div>
+    {% for tag in general_tags %}
+    {% endfor %}
+    <button class="tag" id="tag_{{ tag.tag_name }}">{{ tag.tag_name }}</button>
+    {% for tag in author_tags %}
+    <button class="tag" id="tag_{{ tag.tag_name }}">{{ tag.tag_name }}</button>
+    {% endfor %}
+    {% for tag in book_tags %}
+    <button class="tag" id="tag_{{ tag.tag_name }}">{{ tag.tag_name }}</button>
+    {% endfor %}
+</div>
 {% endblock %}

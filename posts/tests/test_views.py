@@ -25,6 +25,7 @@ class TestHomeView(TestCase):
         t1 = Tag.objects.create(tag_name='general', group_name='general')
         t2 = Tag.objects.create(tag_name='book', group_name='author')
         t3 = Tag.objects.create(tag_name='author', group_name='book')
+        self.response = self.client.get(reverse('home_page'))
         self.assertEqual(len(Tag.objects.all()), 3)
         general_tags = self.response.context['general_tags']
         self.assertEqual(len(general_tags), 1)
