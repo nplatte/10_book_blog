@@ -7,8 +7,8 @@
 
 <div>
     {% for tag in general_tags %}
-    {% endfor %}
     <button class="tag" id="tag_{{ tag.tag_name }}">{{ tag.tag_name }}</button>
+    {% endfor %}
     {% for tag in author_tags %}
     <button class="tag" id="tag_{{ tag.tag_name }}">{{ tag.tag_name }}</button>
     {% endfor %}
