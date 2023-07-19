@@ -7,6 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.core import serializers
 
+
+
 def home_page(request):
     posts = Post.objects.all()
     tag_groups = [
@@ -52,8 +54,21 @@ def view_post_page(request):
     return render(request, 'posts/view.html')
 
 def ajax_call(request):
-    posts = Post.objects.all()
+    new_tag = request.POST.dict()
+    ACTIVE_TAGS.append(Tag.objects.get(tag_name=new_tag['tag[]']))
+    posts = _get_posts()
     data = serializers.serialize('json', posts)
     return JsonResponse(data, safe=False)
 
-        
+ACTIVE_TAGS = []
+
+def _get_posts():
+    if len(ACTIVE_TAGS) == 0:
+        return Post.objects.all()
+    start = ACTIVE_TAGS[0]
+    posts = Post.objects.filter(tags__tag_name=start.tag_name, tags__group_name=start.group_name)
+    for t in ACTIVE_TAGS[1:]:
+        new_filter = Post.objects.filter(tags__tag_name=t.tag_name, tags__group_name=t.group_name)
+        posts = posts | new_filter
+    return posts
+    

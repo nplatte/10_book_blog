@@ -6,7 +6,7 @@ import json
 from posts.models import Post, Tag
 from posts.forms import PostModelForm, TagForm
 from django.contrib.auth.models import User
-from posts.views import _add_tags
+from posts.views import _add_tags, _get_posts, ACTIVE_TAGS
 
 # test that the context is being passed correctly
 # test that the forms are the right forms  to use
@@ -89,20 +89,23 @@ class TestPOSTCreatePostView(TestCase):
 
 class TestAJAXViewPOST(TestCase):
 
+    # base case of a post request returns a valid status code
+    # one tag filters posts, two tags continues the filter
+
+    def setUp(self):
+        self.t1 = Tag.objects.create(tag_name='test', group_name='general')
+        self.p1 = Post.objects.create(book_title='test_book')
+        self.p2 = Post.objects.create(book_title='test_book2')
+        self.p1.tags.add(self.t1)
+        self.response = self.client.post(reverse('ajax_post'), {'tag[]': 'test'})
+
     def test_base_case(self):
-        request = self.client.post(reverse('ajax_post'), {})
-        self.assertEqual(request.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
     def test_returns_filtered_posts(self):
-        t1 = Tag.objects.create(tag_name='test', group_name='general')
-        p1 = Post.objects.create(book_title='test_book')
-        p2 = Post.objects.create(book_title='test_book2')
-        p1.tags.add(t1)
-
-        response = self.client.post(reverse('ajax_post'), {'tag[]': ['test', 'general']})
-        data = json.loads(response.content)
+        data = json.loads(self.response.content)
         decereal = deserialize('json',data)
-        self.assertNotIn(p2.pk, [post.object.pk for post in decereal])
+        self.assertNotIn(self.p2.pk, [post.object.pk for post in decereal])
         
 
 class TestHelperFunc(TestCase):
@@ -129,3 +132,17 @@ class TestHelperFunc(TestCase):
         self.assertEqual(len(Tag.objects.all()), 2)
         _add_tags(self.new_post, self.tags, 'general')
         self.assertEqual(len(Tag.objects.all()), 2)
+
+    def test_get_posts(self):
+        p1, p2, p3 = Post.objects.create(title='Post 1'), Post.objects.create(title='Post 2'), Post.objects.create(title='Post 3')
+        t1, t2, t3 = Tag.objects.create(tag_name='start', group_name='general'), Tag.objects.create(tag_name='middle', group_name='author'), Tag.objects.create(tag_name='end', group_name='book')
+        p1.tags.add(t1)
+        p2.tags.add(t2)
+        p3.tags.add(t3)
+        ACTIVE_TAGS.append(t1)
+        ACTIVE_TAGS.append(t2)
+
+        posts = _get_posts()
+        self.assertEqual(len(posts), 2)
+        for post in posts:
+            self.assertNotEqual(post.pk, p3.pk)  
