@@ -7,11 +7,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 def home_page(request):
     posts = Post.objects.all()
+    tag_groups = [
+        Tag.objects.filter(group_name='general'),
+        Tag.objects.filter(group_name='author'),
+        Tag.objects.filter(group_name='book'),
+    ]
     context = {
         'posts': posts,
-        'general_tags': Tag.objects.filter(group_name='general'),
-        'author_tags': Tag.objects.filter(group_name='author'),
-        'book_tags': Tag.objects.filter(group_name='book'),
+        'tag_groups': tag_groups
         }
     return render(request, 'posts/home.html', context)
 

@@ -16,26 +16,26 @@ class TestHomeView(TestCase):
     def test_view_returns_right_template(self):
         self.assertTemplateUsed('posts/home.html')
 
-    def test_context_contains_post_requests(self):
+    def test_context_contains_posts(self):
         Post.objects.create(title='test')
         response = self.client.get(reverse('home_page'))
         self.assertEqual(len(response.context['posts']), 1)
 
-    def test_view_tag_context(self):
+    def test_context_contains_tags(self):
         t1 = Tag.objects.create(tag_name='general', group_name='general')
         t2 = Tag.objects.create(tag_name='book', group_name='author')
         t3 = Tag.objects.create(tag_name='author', group_name='book')
+
         self.response = self.client.get(reverse('home_page'))
-        self.assertEqual(len(Tag.objects.all()), 3)
-        general_tags = self.response.context['general_tags']
-        self.assertEqual(len(general_tags), 1)
-        self.assertEqual(general_tags[0].id, t1.id)
-        author_tags = self.response.context['author_tags']
-        self.assertEqual(len(author_tags), 1)
-        self.assertEqual(author_tags[0].id, t2.id)
-        book_series_tags = self.response.context['book_tags']
-        self.assertEqual(len(book_series_tags), 1)
-        self.assertEqual(book_series_tags[0].id, t3.id)
+        tag_group_list = self.response.context['tag_groups']
+
+        self.assertEqual(len(tag_group_list), 3)
+        general_tags = tag_group_list[0]
+        self.assertEqual(general_tags[0], Tag.objects.filter(group_name='general')[0])
+        author_tags = tag_group_list[1]
+        self.assertEqual(author_tags[0], Tag.objects.filter(group_name='author')[0])
+        book_tags = tag_group_list[2]
+        self.assertEqual(book_tags[0], Tag.objects.filter(group_name='book')[0])
 
 
 class TestGETCreatePostView(TestCase):
