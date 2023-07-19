@@ -85,6 +85,13 @@ class TestPOSTCreatePostView(TestCase):
         self.assertEqual(new_post.id, same_post[0].id)
 
 
+class TestAJAXViewPOST(TestCase):
+
+    def test_base_case(self):
+        request = self.client.post(reverse('ajax_post'), {})
+        self.assertEqual(request.status_code, 200)
+
+
 class TestHelperFunc(TestCase):
 
     def setUp(self) -> None:

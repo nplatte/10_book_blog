@@ -4,6 +4,8 @@ from django.urls import reverse
 from posts.forms import PostModelForm, TagForm
 from posts.models import Post, Tag
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
+from django.core import serializers
 
 def home_page(request):
     posts = Post.objects.all()
@@ -48,3 +50,7 @@ def _add_tags(post, tag_list, tag_type):
 
 def view_post_page(request):
     return render(request, 'posts/view.html')
+
+def ajax_call(request):
+    data = serializers.serialize('xml', Post.objects.all())
+    return JsonResponse({'posts': data})
