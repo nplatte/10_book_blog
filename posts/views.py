@@ -52,5 +52,6 @@ def view_post_page(request):
     return render(request, 'posts/view.html')
 
 def ajax_call(request):
-    data = serializers.serialize('xml', Post.objects.all())
+    print(request.POST)
+    data = serializers.serialize('json', Post.objects.all())
     return JsonResponse({'posts': data})

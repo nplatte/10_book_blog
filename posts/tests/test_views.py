@@ -91,6 +91,9 @@ class TestAJAXViewPOST(TestCase):
         request = self.client.post(reverse('ajax_post'), {})
         self.assertEqual(request.status_code, 200)
 
+    def test_returns_filtered_posts(self):
+        pass
+
 
 class TestHelperFunc(TestCase):
 

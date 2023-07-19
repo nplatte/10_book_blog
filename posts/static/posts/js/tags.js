@@ -1,12 +1,10 @@
 
 function TagClicked(tag_name, tag_group) {
     var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
-
-    console.log(csrftoken);
-    console.log(tag_group);
     $.ajax({
         url: 'posts/ajax-filter-call',
         type: 'POST',
+        data: { tag: [tag_name, tag_group]},
         headers: {
             'X-CSRFToken': csrftoken
         },
