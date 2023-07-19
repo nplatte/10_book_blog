@@ -103,8 +103,8 @@ class TestAJAXViewPOST(TestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_returns_filtered_posts(self):
-        data = json.loads(self.response.content)
-        decereal = deserialize('json',data)
+        #data = json.loads(self.response.content)
+        decereal = deserialize('json', self.response.content)
         self.assertNotIn(self.p2.pk, [post.object.pk for post in decereal])
         
 

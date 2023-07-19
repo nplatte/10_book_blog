@@ -4,7 +4,7 @@ from django.urls import reverse
 from posts.forms import PostModelForm, TagForm
 from posts.models import Post, Tag
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 
 
@@ -58,7 +58,7 @@ def ajax_call(request):
     ACTIVE_TAGS.append(Tag.objects.get(tag_name=new_tag['tag[]']))
     posts = _get_posts()
     data = serializers.serialize('json', posts)
-    return JsonResponse(data, safe=False)
+    return HttpResponse(data)
 
 ACTIVE_TAGS = []
 
