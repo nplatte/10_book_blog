@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.core.serializers import deserialize
+import json
 
 from posts.models import Post, Tag
 from posts.forms import PostModelForm, TagForm
@@ -92,8 +94,16 @@ class TestAJAXViewPOST(TestCase):
         self.assertEqual(request.status_code, 200)
 
     def test_returns_filtered_posts(self):
-        pass
+        t1 = Tag.objects.create(tag_name='test', group_name='general')
+        p1 = Post.objects.create(book_title='test_book')
+        p2 = Post.objects.create(book_title='test_book2')
+        p1.tags.add(t1)
 
+        response = self.client.post(reverse('ajax_post'), {'tag[]': ['test', 'general']})
+        data = json.loads(response.content)
+        decereal = deserialize('json',data)
+        self.assertNotIn(p2.pk, [post.object.pk for post in decereal])
+        
 
 class TestHelperFunc(TestCase):
 
