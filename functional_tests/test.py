@@ -102,6 +102,7 @@ class TestCanPost(StaticLiveServerTestCase):
         self.assertEqual(1, post_count)
         # I click it again and all of the posts appear
         start_tag.click()
+        start_tag.click()
         post_count = len(self.browser.find_elements(By.CLASS_NAME, 'post'))
         self.assertEqual(3, post_count)
         
