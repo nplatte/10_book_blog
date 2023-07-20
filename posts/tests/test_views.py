@@ -6,7 +6,7 @@ import json
 from posts.models import Post, Tag
 from posts.forms import PostModelForm, TagForm
 from django.contrib.auth.models import User
-from posts.views import _add_tags, _get_posts
+from posts.views import _add_tags, _get_posts, _toggle_tag
 
 # test that the context is being passed correctly
 # test that the forms are the right forms  to use
@@ -137,8 +137,8 @@ class TestAJAXCallHelperFuncs(TestCase):
     def setUp(self) -> None:
         self.p1 = Post.objects.create(title='Post 1')
         self.p2 = Post.objects.create(title='Post 2')
-        self.t1 = Tag.objects.create(tag_name='start', group_name='general')
-        self.t2 = Tag.objects.create(tag_name='middle', group_name='author')
+        self.t1 = Tag.objects.create(tag_name='start', group_name='general', status='none')
+        self.t2 = Tag.objects.create(tag_name='middle', group_name='author', status='none')
         self.p1.tags.add(self.t1)
         self.p2.tags.add(self.t2)
         return super().setUp()
@@ -178,3 +178,13 @@ class TestAJAXCallHelperFuncs(TestCase):
 
         self.assertEqual(len(posts), 1)
         self.assertEqual(posts[0].pk, self.p2.pk)
+
+    def test_toggle_tag(self):
+        
+        self.assertEqual(self.t1.status, 'none')
+        tag = _toggle_tag('start')
+        self.assertEqual(tag.status, 'active')
+        tag = _toggle_tag('start')
+        self.assertEqual(tag.status, 'inactive')
+        tag = _toggle_tag('start')
+        self.assertEqual(tag.status, 'none')
