@@ -55,17 +55,27 @@ def view_post_page(request):
 
 def ajax_call(request):
     tag_dict = request.POST.dict()
-    toggled_tag = Tag.objects.get(tag_name=tag_dict['tag'])
-    toggled_tag.status = 'active'
-    toggled_tag.save()
+    _toggle_tag(tag_dict['tag'])
     posts = _get_posts()
     data = serializers.serialize('json', posts)
     return HttpResponse(data)
 
 def _get_posts():
-    # if there are active tags
-    active_tag_posts = Post.objects.filter(tags__status='active')
-    if len(active_tag_posts) > 0:
-        return active_tag_posts
+    active_tagged = Post.objects.filter(tags__status='active')
+    excluded_tagged = Post.objects.exclude(tags__status='inactive')
+    if len(active_tagged) > 0 and len(excluded_tagged) > 0:
+        return Post.objects.filter(tags__status='active').exclude(tags__status='inactive')
+    elif len(active_tagged) > 0:
+        return active_tagged
+    elif len(excluded_tagged) > 0:
+        return excluded_tagged
     return Post.objects.all()
+
+def _toggle_tag(tag_name):
+    tag_to_toggle = Tag.objects.get(tag_name=tag_name)
+    if tag_to_toggle.status == 'active':
+        tag_to_toggle.status = 'inactive'
+    elif tag_to_toggle.status == 'inactive':
+        tag_to_toggle.status = 'none'
+    tag_to_toggle.save()
     

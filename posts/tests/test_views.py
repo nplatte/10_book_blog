@@ -132,19 +132,49 @@ class TestHelperFunc(TestCase):
         _add_tags(self.new_post, self.tags, 'general')
         self.assertEqual(len(Tag.objects.all()), 2)
 
-    def test_get_posts(self):
-        p1, p2, p3 = Post.objects.create(title='Post 1'), Post.objects.create(title='Post 2'), Post.objects.create(title='Post 3')
-        t1, t2, t3 = Tag.objects.create(tag_name='start', group_name='general'), Tag.objects.create(tag_name='middle', group_name='author'), Tag.objects.create(tag_name='end', group_name='book')
-        p1.tags.add(t1)
-        p2.tags.add(t2)
-        p3.tags.add(t3)
-        
-        t1.status = 'active'
-        t2.status = 'active'
-        t1.save()
-        t2.save()
+class TestAJAXCallHelperFuncs(TestCase):
 
+    def setUp(self) -> None:
+        self.p1 = Post.objects.create(title='Post 1')
+        self.p2 = Post.objects.create(title='Post 2')
+        self.t1 = Tag.objects.create(tag_name='start', group_name='general')
+        self.t2 = Tag.objects.create(tag_name='middle', group_name='author')
+        self.p1.tags.add(self.t1)
+        self.p2.tags.add(self.t2)
+        return super().setUp()
+
+    def test_base_case(self):
+        # if no tags are active I want all the posts
         posts = _get_posts()
         self.assertEqual(len(posts), 2)
-        for post in posts:
-            self.assertNotEqual(post.pk, p3.pk)  
+
+    def test_one_tag_active(self):
+        # if one tag is active, I only want active tags
+        self.t1.status = 'active'
+        self.t1.save()
+
+        posts = _get_posts()
+
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(self.p1.pk, posts[0].pk)
+
+    def test_one_tag_excluded(self):
+        self.t1.status = 'inactive'
+        self.t1.save()
+
+        posts = _get_posts()
+
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(self.p2.pk, posts[0].pk)
+
+    def test_post_with_active_and_inactive_tag_not_returned(self):
+        self.p1.tags.add(self.t2)
+        self.t1.status = 'inactive'
+        self.t2.status = 'active'
+        self.t2.save()
+        self.t1.save()
+
+        posts = _get_posts()
+
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0].pk, self.p2.pk)
