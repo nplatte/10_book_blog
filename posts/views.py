@@ -54,8 +54,9 @@ def view_post_page(request):
     return render(request, 'posts/view.html')
 
 def ajax_call(request):
+    print(request.POST)
     new_tag = request.POST.dict()
-    ACTIVE_TAGS.append(Tag.objects.get(tag_name=new_tag['tag[]']))
+    ACTIVE_TAGS.append(Tag.objects.get(tag_name=new_tag['tag']))
     posts = _get_posts()
     data = serializers.serialize('json', posts)
     return HttpResponse(data)

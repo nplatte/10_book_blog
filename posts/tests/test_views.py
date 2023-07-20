@@ -97,13 +97,12 @@ class TestAJAXViewPOST(TestCase):
         self.p1 = Post.objects.create(book_title='test_book')
         self.p2 = Post.objects.create(book_title='test_book2')
         self.p1.tags.add(self.t1)
-        self.response = self.client.post(reverse('ajax_post'), {'tag[]': 'test'})
+        self.response = self.client.post(reverse('ajax_post'), {'tag': 'test'})
 
     def test_base_case(self):
         self.assertEqual(self.response.status_code, 200)
 
     def test_returns_filtered_posts(self):
-        #data = json.loads(self.response.content)
         decereal = deserialize('json', self.response.content)
         self.assertNotIn(self.p2.pk, [post.object.pk for post in decereal])
         
