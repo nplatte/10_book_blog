@@ -6,7 +6,7 @@ import json
 from posts.models import Post, Tag
 from posts.forms import PostModelForm, TagForm
 from django.contrib.auth.models import User
-from posts.views import _add_tags, _get_posts, ACTIVE_TAGS
+from posts.views import _add_tags, _get_posts
 
 # test that the context is being passed correctly
 # test that the forms are the right forms  to use
@@ -138,8 +138,11 @@ class TestHelperFunc(TestCase):
         p1.tags.add(t1)
         p2.tags.add(t2)
         p3.tags.add(t3)
-        ACTIVE_TAGS.append(t1)
-        ACTIVE_TAGS.append(t2)
+        
+        t1.status = 'active'
+        t2.status = 'active'
+        t1.save()
+        t2.save()
 
         posts = _get_posts()
         self.assertEqual(len(posts), 2)

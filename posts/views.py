@@ -54,22 +54,18 @@ def view_post_page(request):
     return render(request, 'posts/view.html')
 
 def ajax_call(request):
-    print(request.POST)
-    new_tag = request.POST.dict()
-    ACTIVE_TAGS.append(Tag.objects.get(tag_name=new_tag['tag']))
+    tag_dict = request.POST.dict()
+    toggled_tag = Tag.objects.get(tag_name=tag_dict['tag'])
+    toggled_tag.status = 'active'
+    toggled_tag.save()
     posts = _get_posts()
     data = serializers.serialize('json', posts)
     return HttpResponse(data)
 
-ACTIVE_TAGS = []
-
 def _get_posts():
-    if len(ACTIVE_TAGS) == 0:
-        return Post.objects.all()
-    start = ACTIVE_TAGS[0]
-    posts = Post.objects.filter(tags__tag_name=start.tag_name, tags__group_name=start.group_name)
-    for t in ACTIVE_TAGS[1:]:
-        new_filter = Post.objects.filter(tags__tag_name=t.tag_name, tags__group_name=t.group_name)
-        posts = posts | new_filter
-    return posts
+    # if there are active tags
+    active_tag_posts = Post.objects.filter(tags__status='active')
+    if len(active_tag_posts) > 0:
+        return active_tag_posts
+    return Post.objects.all()
     
