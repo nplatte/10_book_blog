@@ -144,26 +144,20 @@ class TestAJAXCallHelperFuncs(TestCase):
         return super().setUp()
 
     def test_base_case(self):
-        # if no tags are active I want all the posts
         posts = _get_posts()
         self.assertEqual(len(posts), 2)
 
     def test_one_tag_active(self):
-        # if one tag is active, I only want active tags
         self.t1.status = 'active'
         self.t1.save()
-
         posts = _get_posts()
-
         self.assertEqual(len(posts), 1)
         self.assertEqual(self.p1.pk, posts[0].pk)
 
     def test_one_tag_excluded(self):
         self.t1.status = 'inactive'
         self.t1.save()
-
         posts = _get_posts()
-
         self.assertEqual(len(posts), 1)
         self.assertEqual(self.p2.pk, posts[0].pk)
 
@@ -173,9 +167,7 @@ class TestAJAXCallHelperFuncs(TestCase):
         self.t2.status = 'active'
         self.t2.save()
         self.t1.save()
-
         posts = _get_posts()
-
         self.assertEqual(len(posts), 1)
         self.assertEqual(posts[0].pk, self.p2.pk)
 
