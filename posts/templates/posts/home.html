@@ -1,9 +1,17 @@
 {% extends 'posts/base.html' %}
+{% load static %}
+
+{% block 'title' %}
+<link rel="stylesheet" type="text/css" href="{% static 'posts/css/posts.css' %}">
+{% endblock %}
 
 {% block 'body' %}
 <div id="post_list">
     {% for post in posts %}
+    <div class="post_div">
         <a class="post">{{ post.title }}</a>
+    </div>
+        
     {% endfor %}
 </div>
 <div>
