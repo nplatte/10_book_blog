@@ -6,24 +6,30 @@
 {% endblock %}
 
 {% block 'body' %}
-<div id="post_list">
-    {% for post in posts %}
-    <div class="post_div">
-        <a class="post">{{ post.title }}</a>
+
+<div class="grid_box">
+    <div class="post_list">
+        {% for post in posts %}
+        <div class="post_div">
+            <a class="post">{{ post.title }}</a>
+        </div>
+            
+        {% endfor %}
+    </div>
+    <div>
+        {% csrf_token %}
+    <div class="tag_list">
+        {% for tags in tag_groups %}
+        {% for tag in tags %}
+        <button class="tag" id="tag_{{ tag.tag_name }}" onclick="TagClicked('{{ tag.tag_name }}', '{{ tag.group_name }}')">{{ tag.tag_name }}</button>
+        {% endfor %}
+        {% endfor %}
     </div>
         
-    {% endfor %}
+        
+        
+    </div>
 </div>
-<div>
-    {% csrf_token %}
-    
-    {% for tags in tag_groups %}
-    {% for tag in tags %}
-    <button class="tag" id="tag_{{ tag.tag_name }}" onclick="TagClicked('{{ tag.tag_name }}', '{{ tag.group_name }}')">{{ tag.tag_name }}</button>
-    {% endfor %}
-    {% endfor %}
-    
-    
-</div>
+
 <script src="\static\posts\js\tags.js"></script>
 {% endblock %}

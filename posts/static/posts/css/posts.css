@@ -1,3 +1,17 @@
+div.grid_box {
+    display: grid;
+    grid-template-columns: [space1] 5% [admin] 20% [space2] 5% [posts] 40% [space3] 5% [tags] 20% [space4] 5%;
+    grid-template-rows: [all] 100%;
+}
+
+.post_list {
+    grid-column: 4/5;
+}
+
+.tag_list {
+    grid-column: 6/7;
+}
+
 .post_div {
     border: 2px solid black;
     border-radius: 4px;
