@@ -5,7 +5,13 @@ function TagClicked(tag_name, tag_group) {
 }
 
 function UpdateTagColor(tag) {
-    console.log('here')
+    const id_name = 'fake_tag_'.concat(tag);
+    tag = document.getElementById(id_name);
+    if (tag.classList.contains("nonactive_tag")) {
+        tag.classList.remove('nonactive_tag');
+        tag.classList.add('active_tag')
+    } 
+    
 }
 
 function GetPostFilterData(tag) {

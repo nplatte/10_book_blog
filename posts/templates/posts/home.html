@@ -3,6 +3,7 @@
 
 {% block 'title' %}
 <link rel="stylesheet" type="text/css" href="{% static 'posts/css/posts.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'posts/css/tags.css' %}">
 {% endblock %}
 
 {% block 'body' %}
@@ -22,7 +23,7 @@
         {% csrf_token %}
         {% for tags in tag_groups %}
         {% for tag in tags %}
-        <h5 class="fake_tag" id="fake_tag_{{ tag.tag_name }}" onclick="TagClicked('{{ tag.tag_name }}', '{{ tag.group_name }}')">{{ tag.tag_name }}</h5>
+        <h5 class="fake_tag nonactive_tag" id="fake_tag_{{ tag.tag_name }}" onclick="TagClicked('{{ tag.tag_name }}', '{{ tag.group_name }}')">{{ tag.tag_name }}</h5>
         <button class="tag" id="tag_{{ tag.tag_name }}" >{{ tag.tag_name }}</button>
         {% endfor %}
         {% endfor %}
