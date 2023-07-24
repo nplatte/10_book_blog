@@ -2,12 +2,34 @@
     --active-text-color: white;
     --active-bg-color: green;
     --active-outline-color: green;
-
+    --nonactive-text-color: rgb(117, 117, 117);
+    --nonactive-bg-color: rgb(200, 200, 200);
+    --nonactive-outline-color: rgb(117, 117, 117);
+    --exclude-text-color: white;
+    --exclude-bg-color: red;
+    --exclude-outline-color: red;
 }
 
+.fake_tag {
+    border-radius: 5px;
+    width: 33%;
+    text-align: center;
+}
 
 .active_tag {
     color: var(--active-text-color);
     background: var(--active-bg-color);
     border-color: var(--active-outline-color);
+}
+
+.nonactive_tag {
+    color: var(--nonactive-text-color);
+    background: var(--nonactive-bg-color);
+    border-color: var(--nonactive-outline-color);
+}
+
+.exclude_tag {
+    color: var(--exclude-text-color);
+    background: var(--exclude-bg-color);
+    border-color: var(--exclude-outline-color);
 }
