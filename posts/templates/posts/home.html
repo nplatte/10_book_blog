@@ -8,7 +8,7 @@
 {% block 'body' %}
 
 <div class="grid_box">
-    <div class="post_list">
+    <div id="post_list">
         <h2 id="post-header">New Posts</h2>
         {% for post in posts %}
         <div class="post_div">
@@ -22,7 +22,8 @@
         {% csrf_token %}
         {% for tags in tag_groups %}
         {% for tag in tags %}
-        <button class="tag" id="tag_{{ tag.tag_name }}" onclick="TagClicked('{{ tag.tag_name }}', '{{ tag.group_name }}')">{{ tag.tag_name }}</button>
+        <h5 class="fake_tag" id="fake_tag_{{ tag.tag_name }}" onclick="TagClicked('{{ tag.tag_name }}', '{{ tag.group_name }}')">{{ tag.tag_name }}</h5>
+        <button class="tag" id="tag_{{ tag.tag_name }}" >{{ tag.tag_name }}</button>
         {% endfor %}
         {% endfor %}
     </div>

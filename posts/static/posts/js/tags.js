@@ -9,7 +9,7 @@ function TagClicked(tag_name, tag_group) {
             'X-CSRFToken': csrftoken
         },
         success: function (response){
-            response = JSON.parse(response)
+            response = JSON.parse(response);
             const post_list = document.getElementById('post_list');
             var new_post_list = document.createElement('div');
             new_post_list.setAttribute('id', 'post_list');
@@ -19,12 +19,11 @@ function TagClicked(tag_name, tag_group) {
                 new_post_element.textContent = 'test'
                 new_post_list.appendChild(new_post_element);
             }
-            console.log(response)
             response.forEach(addPost);
             post_list.replaceWith(new_post_list);
         },
         error: function (xhr, textStatus, error) {
-            console.log(error);
+            console.log('NAH');
         }
     })
 }
