@@ -1,0 +1,13 @@
+:root {
+    --active-text-color: white;
+    --active-bg-color: green;
+    --active-outline-color: green;
+
+}
+
+
+.active_tag {
+    color: var(--active-text-color);
+    background: var(--active-bg-color);
+    border-color: var(--active-outline-color);
+}
