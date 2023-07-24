@@ -9,9 +9,14 @@ function UpdateTagColor(tag) {
     tag = document.getElementById(id_name);
     if (tag.classList.contains("nonactive_tag")) {
         tag.classList.remove('nonactive_tag');
-        tag.classList.add('active_tag')
-    } 
-    
+        tag.classList.add('active_tag');
+    } else if (tag.classList.contains("active_tag")) {
+        tag.classList.remove('active_tag');
+        tag.classList.add('exclude_tag');
+    } else if (tag.classList.contains("exclude_tag")) {
+        tag.classList.remove('exclude_tag');
+        tag.classList.add('nonactive_tag');
+    }
 }
 
 function GetPostFilterData(tag) {
