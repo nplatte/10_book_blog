@@ -1,10 +1,19 @@
 
 function TagClicked(tag_name, tag_group) {
+    UpdateTagColor(tag_name);
+    GetPostFilterData(tag_name);
+}
+
+function UpdateTagColor(tag) {
+    console.log('here')
+}
+
+function GetPostFilterData(tag) {
     var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
     $.ajax({
         url: 'posts/ajax-filter-call',
         type: 'POST',
-        data: { tag: tag_name},
+        data: { tag: tag},
         headers: {
             'X-CSRFToken': csrftoken
         },

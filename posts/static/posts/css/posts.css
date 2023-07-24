@@ -4,7 +4,7 @@ div.grid_box {
     grid-template-rows: [all] 100%;
 }
 
-.post_list {
+#post_list {
     grid-column: 4/5;
 }
 
@@ -20,4 +20,8 @@ div.grid_box {
 
 .post {
     color: purple;
+}
+
+.tag {
+    display: none;
 }
